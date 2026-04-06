@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FileWarning, MapPin, Camera, Send, ChevronDown, Shield } from "lucide-react";
 import SOSButton from "@/components/SOSButton";
 import BottomNav from "@/components/BottomNav";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const incidentTypes = [
   "Harassment", "Stalking", "Theft", "Assault", "Eve Teasing",
@@ -10,14 +13,53 @@ const incidentTypes = [
 ];
 
 const ReportIncident = () => {
+  const { user } = useAuth();
   const [type, setType] = useState("");
   const [description, setDescription] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationLoading, setLocationLoading] = useState(false);
 
-  const handleSubmit = () => {
-    if (!type || !description) return;
-    setSubmitted(true);
+  const handleGetLocation = () => {
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocation not supported");
+      return;
+    }
+    setLocationLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationLoading(false);
+        toast.success("Location captured!");
+      },
+      () => {
+        toast.error("Could not get location");
+        setLocationLoading(false);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
+  const handleSubmit = async () => {
+    if (!type || !description || !user) return;
+    setLoading(true);
+    const { error } = await supabase.from("incident_reports").insert({
+      user_id: user.id,
+      incident_type: type,
+      description,
+      is_anonymous: isAnonymous,
+      location_lat: location?.lat ?? null,
+      location_lng: location?.lng ?? null,
+    });
+
+    if (error) {
+      toast.error("Failed to submit report: " + error.message);
+    } else {
+      setSubmitted(true);
+    }
+    setLoading(false);
   };
 
   if (submitted) {
@@ -40,6 +82,7 @@ const ReportIncident = () => {
               setSubmitted(false);
               setType("");
               setDescription("");
+              setLocation(null);
             }}
             className="px-8 py-3 rounded-2xl gradient-primary text-primary-foreground font-semibold shadow-soft"
           >
@@ -110,10 +153,20 @@ const ReportIncident = () => {
           {/* Location */}
           <div className="bg-card rounded-2xl p-4 shadow-card">
             <label className="text-sm font-semibold text-card-foreground mb-2 block">Location</label>
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary text-secondary-foreground">
-              <MapPin className="w-4 h-4 text-primary" />
-              <span className="text-sm">Use current location</span>
-              <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground" />
+            <button
+              onClick={handleGetLocation}
+              disabled={locationLoading}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-secondary text-secondary-foreground"
+            >
+              <MapPin className={`w-4 h-4 ${location ? "text-safe" : "text-primary"}`} />
+              <span className="text-sm">
+                {locationLoading
+                  ? "Getting location..."
+                  : location
+                    ? `📍 ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`
+                    : "Use current location"}
+              </span>
+              {!location && <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground" />}
             </button>
           </div>
 
@@ -144,11 +197,11 @@ const ReportIncident = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handleSubmit}
-            disabled={!type || !description}
+            disabled={!type || !description || loading}
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl gradient-primary text-primary-foreground font-bold text-base shadow-soft disabled:opacity-50"
           >
             <Send className="w-5 h-5" />
-            Submit Report
+            {loading ? "Submitting..." : "Submit Report"}
           </motion.button>
         </div>
       </div>
