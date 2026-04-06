@@ -1,9 +1,12 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shield, MapPin, Users, Bell, AlertTriangle, Navigation, TrendingDown, Eye } from "lucide-react";
 import SafetyScoreCard from "@/components/SafetyScoreCard";
 import QuickAction from "@/components/QuickAction";
 import SOSButton from "@/components/SOSButton";
 import BottomNav from "@/components/BottomNav";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const recentAlerts = [
   { id: 1, type: "warning", text: "Low safety rating nearby: MG Road after 10 PM", time: "2h ago" },
@@ -12,6 +15,26 @@ const recentAlerts = [
 ];
 
 const Dashboard = () => {
+  const { user } = useAuth();
+  const [firstName, setFirstName] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchName = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data?.full_name) {
+        setFirstName(data.full_name.split(" ")[0]);
+      } else {
+        setFirstName(user.email?.split("@")[0] || "there");
+      }
+    };
+    fetchName();
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
@@ -19,7 +42,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
-            <h1 className="text-2xl font-bold text-primary-foreground">Priya ✨</h1>
+            <h1 className="text-2xl font-bold text-primary-foreground">{firstName || "..."} ✨</h1>
           </div>
           <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
             <Bell className="w-5 h-5 text-primary-foreground" />
