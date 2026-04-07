@@ -24,10 +24,19 @@ interface SafetyZone {
   lng: number;
 }
 
+interface SearchResult {
+  lat: number;
+  lng: number;
+  name: string;
+  safetyRating: number;
+  safetyStatus: "safe" | "moderate" | "unsafe";
+}
+
 interface LeafletMapProps {
   zones: SafetyZone[];
   showHeatmap: boolean;
   trackLocation: boolean;
+  searchResult?: SearchResult | null;
 }
 
 const statusColors = {
