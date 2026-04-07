@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Shield, MapPin, Users, Bell, AlertTriangle, Navigation, TrendingDown, Eye, Sparkles } from "lucide-react";
+import { Shield, MapPin, Users, Bell, AlertTriangle, Navigation, TrendingDown, Eye, Sparkles, Phone } from "lucide-react";
 import SafetyScoreCard from "@/components/SafetyScoreCard";
 import QuickAction from "@/components/QuickAction";
 import SOSButton from "@/components/SOSButton";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const recentAlerts = [
@@ -16,6 +17,7 @@ const recentAlerts = [
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const Dashboard = () => {
             <QuickAction icon={Users} label="Contacts" to="/contacts" />
             <QuickAction icon={Navigation} label="Safe Route" to="/map" />
             <QuickAction icon={Eye} label="Report" to="/report" />
-            <QuickAction icon={Sparkles} label="AI Help" to="/ai-assistant" />
+            <QuickAction icon={Phone} label="Fake Call" to="/fake-call" />
           </div>
         </section>
 
@@ -157,6 +159,17 @@ const Dashboard = () => {
           </div>
         </section>
       </div>
+
+      {/* Floating AI Help Button - opposite side of SOS */}
+      <motion.button
+        onClick={() => navigate("/ai-assistant")}
+        className="fixed bottom-24 left-4 z-50 w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg"
+        whileTap={{ scale: 0.9 }}
+        animate={{ scale: [1, 1.03, 1] }}
+        transition={{ repeat: Infinity, duration: 3 }}
+      >
+        <Sparkles className="w-7 h-7 text-primary-foreground relative z-10" />
+      </motion.button>
 
       <SOSButton />
       <BottomNav />
