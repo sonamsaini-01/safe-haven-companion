@@ -6,6 +6,7 @@ import QuickAction from "@/components/QuickAction";
 import SOSButton from "@/components/SOSButton";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const recentAlerts = [
@@ -16,6 +17,7 @@ const recentAlerts = [
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
@@ -160,7 +162,7 @@ const Dashboard = () => {
 
       {/* Floating AI Help Button - opposite side of SOS */}
       <motion.button
-        onClick={() => window.location.href = "/ai-assistant"}
+        onClick={() => navigate("/ai-assistant")}
         className="fixed bottom-24 left-4 z-50 w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg"
         whileTap={{ scale: 0.9 }}
         animate={{ scale: [1, 1.03, 1] }}
