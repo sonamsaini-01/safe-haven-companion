@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Shield, MapPin, Users, Bell, AlertTriangle, Navigation, TrendingDown, Eye } from "lucide-react";
+import { Shield, MapPin, Users, Bell, AlertTriangle, Navigation, TrendingDown, Eye, Sparkles } from "lucide-react";
 import SafetyScoreCard from "@/components/SafetyScoreCard";
 import QuickAction from "@/components/QuickAction";
 import SOSButton from "@/components/SOSButton";
@@ -62,6 +62,7 @@ const Dashboard = () => {
             <QuickAction icon={Users} label="Contacts" to="/contacts" />
             <QuickAction icon={Navigation} label="Safe Route" to="/map" />
             <QuickAction icon={Eye} label="Report" to="/report" />
+            <QuickAction icon={Sparkles} label="AI Help" to="/ai-assistant" />
           </div>
         </section>
 
