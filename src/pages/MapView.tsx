@@ -117,9 +117,19 @@ const MapView = () => {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="Search for a location..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl bg-card shadow-card text-sm text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full pl-11 pr-12 py-3 rounded-2xl bg-card shadow-card text-sm text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
+          <button
+            onClick={handleSearch}
+            disabled={searching}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl gradient-primary text-primary-foreground"
+          >
+            {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Filters */}
