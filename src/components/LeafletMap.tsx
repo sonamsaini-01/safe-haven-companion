@@ -45,11 +45,12 @@ const statusColors = {
   unsafe: "#ef4444",
 };
 
-const LeafletMap = ({ zones, showHeatmap, trackLocation }: LeafletMapProps) => {
+const LeafletMap = ({ zones, showHeatmap, trackLocation, searchResult }: LeafletMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const userMarker = useRef<L.Marker | null>(null);
   const trackLine = useRef<L.Polyline | null>(null);
+  const searchMarker = useRef<L.Marker | null>(null);
   const [userPos, setUserPos] = useState<[number, number] | null>(null);
 
   // Initialize map
