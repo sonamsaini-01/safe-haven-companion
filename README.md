@@ -57,7 +57,7 @@ Safe Her is a modern, AI-powered personal safety application designed to protect
 | **Database** | PostgreSQL with Row-Level Security |
 | **Auth** | Supabase Auth |
 | **Edge Functions** | Deno-based serverless functions |
-| **AI** | Google Gemini via Lovable AI Gateway |
+| **AI** | Google Gemini |
 | **Routing** | React Router v6 |
 | **State** | TanStack Query |
 
@@ -169,15 +169,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📄 License
-
-This project is built with [Lovable](https://lovable.dev) and is open for educational and hackathon purposes.
-
----
-
 ## 🙏 Acknowledgments
 
-- **Lovable** — For the incredible AI-powered development platform
 - **Supabase** — For the robust backend infrastructure
 - **shadcn/ui** — For the beautiful UI component library
 - **OpenStreetMap & Leaflet** — For the open-source mapping solution
