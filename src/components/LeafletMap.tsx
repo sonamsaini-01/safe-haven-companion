@@ -32,11 +32,21 @@ interface SearchResult {
   safetyStatus: "safe" | "moderate" | "unsafe";
 }
 
+interface IncidentMarker {
+  id: string;
+  lat: number;
+  lng: number;
+  type: string;
+  description: string;
+  created_at: string;
+}
+
 interface LeafletMapProps {
   zones: SafetyZone[];
   showHeatmap: boolean;
   trackLocation: boolean;
   searchResult?: SearchResult | null;
+  incidents?: IncidentMarker[];
 }
 
 const statusColors = {
