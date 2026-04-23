@@ -254,6 +254,32 @@ const LeafletMap = ({ zones, showHeatmap, trackLocation, searchResult, incidents
     };
   }, [searchResult]);
 
+  // Incident report markers (community-verified)
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map) return;
+    const markers: L.Marker[] = [];
+    incidents.forEach((inc) => {
+      const html = `<div style="width:22px;height:22px;background:#f59e0b;border:2px solid white;border-radius:50%;box-shadow:0 0 8px rgba(245,158,11,0.6);display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">!</div>`;
+      const m = L.marker([inc.lat, inc.lng], {
+        icon: L.divIcon({ className: "", html, iconSize: [22, 22], iconAnchor: [11, 11] }),
+      }).addTo(map);
+      const date = new Date(inc.created_at).toLocaleDateString();
+      const desc = inc.description.length > 120 ? inc.description.slice(0, 120) + "…" : inc.description;
+      m.bindPopup(`
+        <div style="font-family:sans-serif;min-width:160px;max-width:220px;">
+          <div style="background:#f59e0b;color:white;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;display:inline-block;margin-bottom:4px;">${inc.type}</div>
+          <div style="font-size:12px;color:#333;line-height:1.4;">${desc}</div>
+          <div style="font-size:10px;color:#888;margin-top:4px;">Reported ${date}</div>
+        </div>
+      `);
+      markers.push(m);
+    });
+    return () => {
+      markers.forEach((m) => m.remove());
+    };
+  }, [incidents]);
+
   return (
     <div ref={mapRef} className="w-full h-full rounded-3xl" style={{ minHeight: 300 }} />
   );
