@@ -77,12 +77,19 @@ const MapView = () => {
 
     setSearching(true);
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`
-      );
-      const data = await res.json();
-      if (data.length === 0) {
-        toast.error("Location not found", { description: "Try a different search term." });
+      // Bias to India and accept villages/hamlets; fall back to global search
+      const url1 = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=in&q=${encodeURIComponent(q)}`;
+      let res = await fetch(url1, { headers: { "Accept-Language": "en" } });
+      let data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        const url2 = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(q)}`;
+        res = await fetch(url2, { headers: { "Accept-Language": "en" } });
+        data = await res.json();
+      }
+      if (!Array.isArray(data) || data.length === 0) {
+        toast.error("Location not found", {
+          description: "Try adding district or state, e.g. 'Khurdi, Yamunanagar, Haryana'.",
+        });
         return;
       }
       const { lat, lon, display_name } = data[0];
