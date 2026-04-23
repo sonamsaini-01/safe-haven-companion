@@ -239,6 +239,14 @@ const MapView = () => {
             >
               <Navigation className="w-3.5 h-3.5" /> Live Track
             </button>
+            <button
+              onClick={() => setShowIncidents(!showIncidents)}
+              className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                showIncidents ? "bg-moderate/15 text-moderate border border-moderate/30" : "bg-card text-card-foreground shadow-card"
+              }`}
+            >
+              <FileWarning className="w-3.5 h-3.5" /> Reports ({incidents.length})
+            </button>
           </div>
         )}
       </div>
@@ -252,7 +260,13 @@ const MapView = () => {
               </div>
             }
           >
-            <LeafletMap zones={filtered} showHeatmap={showHeatmap} trackLocation={trackLocation} searchResult={searchResult} />
+            <LeafletMap
+              zones={filtered}
+              showHeatmap={showHeatmap}
+              trackLocation={trackLocation}
+              searchResult={searchResult}
+              incidents={showIncidents ? incidents : []}
+            />
           </Suspense>
         </div>
       )}
