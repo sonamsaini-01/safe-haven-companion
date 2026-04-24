@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string
+          evidence_urls: string[] | null
           id: string
           incident_type: string
           is_anonymous: boolean
@@ -30,6 +31,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description: string
+          evidence_urls?: string[] | null
           id?: string
           incident_type: string
           is_anonymous?: boolean
@@ -42,6 +44,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
+          evidence_urls?: string[] | null
           id?: string
           incident_type?: string
           is_anonymous?: boolean
