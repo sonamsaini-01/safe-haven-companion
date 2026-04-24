@@ -46,8 +46,17 @@ const Dashboard = () => {
             <p className="text-primary-foreground/70 text-sm">Welcome back,</p>
             <h1 className="text-2xl font-bold text-primary-foreground">{firstName || "..."} ✨</h1>
           </div>
-          <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-            <Bell className="w-5 h-5 text-primary-foreground" />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/guide")}
+              className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center"
+              aria-label="How to use this app"
+            >
+              <BookOpen className="w-5 h-5 text-primary-foreground" />
+            </button>
+            <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
+              <Bell className="w-5 h-5 text-primary-foreground" />
+            </div>
           </div>
         </div>
 
